@@ -72,7 +72,7 @@ fn main() {
         Ok(s) => s,
         Err(e) => {
             eprintln!("Error: {}", e);
-            std::process::exit(1);
+            exit(1);
         }
     };
 
