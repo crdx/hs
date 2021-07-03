@@ -9,7 +9,7 @@ pub fn parse_timestamp(line: &str) -> Option<i64> {
     let line = line.strip_prefix('#')?;
 
     if line.bytes().all(|b| b.is_ascii_digit()) {
-        Some(line.parse().unwrap())
+        line.parse().ok()
     } else {
         None
     }
@@ -61,5 +61,10 @@ mod tests {
     #[test]
     fn multibyte_timestamp_parse() {
         assert_eq!(parse_timestamp("#☃"), None);
+    }
+
+    #[test]
+    fn overflow_timestamp_parse() {
+        assert_eq!(parse_timestamp("#01189998819991197250003"), None);
     }
 }
