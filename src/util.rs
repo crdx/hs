@@ -9,10 +9,10 @@ pub fn parse_timestamp(line: &str) -> Option<i64> {
     let line = line.strip_prefix('#')?;
 
     if line.bytes().all(|b| b.is_ascii_digit()) {
-        line.parse().ok()
-    } else {
-        None
+        return line.parse().ok();
     }
+
+    None
 }
 
 pub fn format_timestamp(timestamp: i64) -> impl fmt::Display {
