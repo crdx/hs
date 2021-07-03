@@ -1,4 +1,4 @@
-use chrono::{Datelike, Local, TimeZone, Timelike};
+use chrono::{DateTime, Datelike, Local, TimeZone, Timelike};
 use std::fmt;
 
 pub fn parse_timestamp(line: &str) -> Option<i64> {
@@ -15,20 +15,27 @@ pub fn parse_timestamp(line: &str) -> Option<i64> {
     None
 }
 
-pub fn format_timestamp(timestamp: i64) -> impl fmt::Display {
-    let a = Local.timestamp(timestamp, 0);
+struct FormattedTimestamp(DateTime<Local>);
 
-    // Not using formatting string '%F %T' here for small efficiency
-    // gains.
-    format!(
-        "{:0>2}-{:0>2}-{:0>2} {:0>2}:{:0>2}:{:0>2}",
-        a.year(),
-        a.month(),
-        a.day(),
-        a.hour(),
-        a.minute(),
-        a.second()
-    )
+impl fmt::Display for FormattedTimestamp {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // Not using formatting string '%F %T' here for small efficiency
+        // gains.
+        write!(
+            f,
+            "{:0>2}-{:0>2}-{:0>2} {:0>2}:{:0>2}:{:0>2}",
+            self.0.year(),
+            self.0.month(),
+            self.0.day(),
+            self.0.hour(),
+            self.0.minute(),
+            self.0.second()
+        )
+    }
+}
+
+pub fn format_timestamp(timestamp: i64) -> impl fmt::Display {
+    FormattedTimestamp(Local.timestamp(timestamp, 0))
 }
 
 #[cfg(test)]
