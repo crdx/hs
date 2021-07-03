@@ -19,15 +19,13 @@ mod command;
 mod history;
 mod util;
 
-fn get_program_name() -> String {
-    // Wow...
+fn get_program_name() -> Option<String> {
     env::current_exe()
-        .unwrap()
-        .file_name()
-        .unwrap()
+        .ok()?
+        .file_name()?
         .to_os_string()
         .into_string()
-        .unwrap()
+        .ok()
 }
 
 fn usage() -> String {
@@ -42,7 +40,7 @@ fn usage() -> String {
             -f, --file <path>    Timestamped Bash history file
             -h, --help           Show help
     ",
-        get_program_name()
+        get_program_name().unwrap()
     );
 
     unindent(&usage)
