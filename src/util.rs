@@ -60,7 +60,7 @@ mod tests {
 
     #[test]
     fn multibyte_timestamp_parse() {
-        assert_eq!(parse_timestamp("#☃"), None);
+        assert_eq!(parse_timestamp("#🔥"), None);
     }
 
     #[test]
