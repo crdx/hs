@@ -36,23 +36,30 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_format_timestamp() {
+    fn timestamp_format() {
         assert_eq!(
-            format!("{}", format_timestamp(1624823395)),
+            format_timestamp(1624823395).to_string(),
             "2021-06-27 20:49:55"
         );
     }
 
     #[test]
-    fn test_good_parse_timestamp() {
-        let correct = parse_timestamp("#1624823395");
-        assert!(correct.is_some());
-        assert_eq!(correct.unwrap(), 1624823395);
+    fn good_timestamp_parse() {
+        assert_eq!(parse_timestamp("#1624823395"), Some(1624823395));
     }
 
     #[test]
-    fn test_bad_parse_timestamp() {
-        let incorrect = parse_timestamp("potato");
-        assert!(incorrect.is_none());
+    fn bad_timestamp_parse() {
+        assert_eq!(parse_timestamp("potato"), None);
+    }
+
+    #[test]
+    fn empty_timestamp_parse() {
+        assert_eq!(parse_timestamp(""), None);
+    }
+
+    #[test]
+    fn multibyte_timestamp_parse() {
+        assert_eq!(parse_timestamp("#☃"), None);
     }
 }
