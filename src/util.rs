@@ -8,11 +8,11 @@ pub fn parse_timestamp(line: &str) -> Option<i64> {
 
     let line = line.strip_prefix('#')?;
 
-    if line.bytes().all(|b| b.is_ascii_digit()) {
-        return line.parse().ok();
+    if !line.bytes().all(|b| b.is_ascii_digit()) {
+        return None;
     }
 
-    None
+    line.parse().ok()
 }
 
 struct FormattedTimestamp(DateTime<Local>);
