@@ -7,7 +7,7 @@
 
 use std::env;
 use std::fs;
-use std::io::ErrorKind;
+use std::io::{self, ErrorKind};
 use std::path::PathBuf;
 use std::process::exit;
 
@@ -79,7 +79,11 @@ fn main() {
     let mut history = history::History::default();
     history.add(&lines);
 
-    match history.display() {
+    // Lock stdout before we do all the writes below.
+    let stdout = io::stdout();
+    let stdout = stdout.lock();
+
+    match history.write(stdout) {
         Err(e) if e.kind() != ErrorKind::BrokenPipe => {
             eprintln!("Error: {}", e);
             exit(1);

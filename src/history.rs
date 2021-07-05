@@ -1,4 +1,4 @@
-use std::io::{self, Write};
+use std::io;
 
 use crate::command::{Command, Commands};
 use crate::util;
@@ -52,17 +52,13 @@ impl<'a> History<'a> {
         self.try_add_command(current_command, current_timestamp);
     }
 
-    pub fn display(&self) -> io::Result<()> {
+    pub fn write(&self, mut f: impl io::Write) -> io::Result<()> {
         let mut i = 1;
-
-        // Lock stdout before we do all the writes below.
-        let stdout = io::stdout();
-        let mut stdout = stdout.lock();
 
         for timestamp in self.commands.keys() {
             for command in &self.commands[timestamp] {
                 writeln!(
-                    stdout,
+                    f,
                     "{}\t{}\t{}",
                     i,
                     util::format_timestamp(*timestamp),
