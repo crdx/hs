@@ -77,7 +77,7 @@ mod tests {
     use std::str::from_utf8;
 
     #[test]
-    fn history() {
+    fn history_singleline() {
         let mut history = History::default();
         history.add("#1624823400\ncommand2\n#1624823395\ncommand1");
         let mut stdout = Vec::new();
@@ -86,6 +86,19 @@ mod tests {
         assert_eq!(
             from_utf8(&stdout).unwrap(),
             "1\t2021-06-27 20:49:55\tcommand1\n2\t2021-06-27 20:50:00\tcommand2\n"
+        );
+    }
+
+    #[test]
+    fn history_multiline() {
+        let mut history = History::default();
+        history.add("#1624823400\ncommand2\n#1624823395\ncommand1line1\ncommand1line2");
+        let mut stdout = Vec::new();
+        history.write(&mut stdout).unwrap();
+
+        assert_eq!(
+            from_utf8(&stdout).unwrap(),
+            "1\t2021-06-27 20:49:55\tcommand1line1 [... TRUNCATED: 1 more line(s) ...]\n2\t2021-06-27 20:50:00\tcommand2\n"
         );
     }
 }
