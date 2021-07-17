@@ -38,12 +38,21 @@ fn usage() -> String {
 
         Options:
             -f, --file <path>    Timestamped Bash history file
-            -h, --help           Show help
-    ",
+            -h, --help           Show help",
         get_program_name().unwrap()
     );
 
     unindent(&usage)
+}
+
+fn parse_opts() -> Opts {
+    match Docopt::new(usage()).and_then(|a| a.deserialize()) {
+        Ok(opts) => opts,
+        Err(_) => {
+            println!("{}", usage());
+            exit(1)
+        }
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -63,9 +72,7 @@ fn get_path(opts: &Opts) -> PathBuf {
 }
 
 fn main() {
-    let opts: Opts = Docopt::new(usage())
-        .and_then(|a| a.deserialize())
-        .unwrap_or_else(|a| a.exit());
+    let opts = parse_opts();
 
     let path = get_path(&opts);
     let lines = match fs::read_to_string(path) {
