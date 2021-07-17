@@ -1,6 +1,6 @@
 # hs
 
-**hs** ("history, sorted") is an efficient tool that parses a timestamped Bash history file and displays it in chronological order as tab-separated values.
+**hs** ("history, sorted") is a tool that parses a timestamped Bash history file and displays it in chronological order as tab-separated values.
 
 ## Why not use the `history` builtin?
 
