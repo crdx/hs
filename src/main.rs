@@ -46,12 +46,11 @@ fn usage() -> String {
 }
 
 fn parse_opts() -> Opts {
-    match Docopt::new(usage()).and_then(|a| a.deserialize()) {
-        Ok(opts) => opts,
-        Err(_) => {
-            println!("{}", usage());
-            exit(1)
-        }
+    if let Ok(opts) = Docopt::new(usage()).and_then(|a| a.deserialize()) {
+        opts
+    } else {
+        println!("{}", usage());
+        exit(1);
     }
 }
 
