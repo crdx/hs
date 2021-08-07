@@ -38,11 +38,12 @@ fn usage() -> String {
 
         Options:
             -f, --file <path>    Timestamped Bash history file
-            -h, --help           Show help",
+            -h, --help           Show help
+        ",
         get_program_name().unwrap()
     );
 
-    unindent(&usage)
+    unindent(&usage.trim())
 }
 
 fn parse_opts() -> Opts {
