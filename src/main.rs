@@ -32,13 +32,13 @@ fn usage() -> String {
     let usage = format!(
         "
         Usage:
-            {} [options] [ --file <path> ]
+            {0} [options] [ --file PATH ]
 
         Parse timestamped Bash history and output it sorted.
 
         Options:
-            -f, --file <path>    Timestamped Bash history file
-            -h, --help           Show help
+            -f, --file PATH    Timestamped Bash history file
+            -h, --help         Show help
         ",
         get_program_name().unwrap()
     );

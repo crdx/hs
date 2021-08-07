@@ -26,13 +26,13 @@ $ target/release/hs
 
 ```
 Usage:
-    hs [options] [ --file <path> ]
+    hs [options] [ --file PATH ]
 
 Parse timestamped Bash history and output it sorted.
 
 Options:
-    -f, --file <path>    Timestamped Bash history file
-    -h, --help           Show help
+    -f, --file PATH    Timestamped Bash history file
+    -h, --help         Show help
 ```
 
 ## Efficiency
