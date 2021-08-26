@@ -86,9 +86,8 @@ fn main() {
     let mut history = history::History::default();
     history.add(&lines);
 
-    // Lock stdout before we do all the writes below.
-    let stdout = io::stdout();
-    let stdout = stdout.lock();
+    // Buffer stdout to improve performance.
+    let stdout = io::BufWriter::new(io::stdout());
 
     match history.write(stdout) {
         Err(e) if e.kind() != ErrorKind::BrokenPipe => {
