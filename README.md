@@ -53,7 +53,7 @@ Benchmark #1: hs
 
 ## Bugs or contributions
 
-Open an [issue](http://github.com/crdx/hs/issues) or send a [pull request](http://github.com/crdx/hs/pulls).
+Open an [issue](https://github.com/crdx/hs/issues) or send a [pull request](https://github.com/crdx/hs/pulls).
 
 ## Licence
 
