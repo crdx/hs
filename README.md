@@ -51,7 +51,7 @@ Benchmark #1: hs
   Range (min … max):   167.2 ms … 205.5 ms    16 runs
 ```
 
-## Bugs or contributions
+## Contributions
 
 Open an [issue](https://github.com/crdx/hs/issues) or send a [pull request](https://github.com/crdx/hs/pulls).
 
