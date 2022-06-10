@@ -16,4 +16,4 @@
 # generate shell completions
 @generate-completions: build
     mkdir -p completions
-    generate-completions target/release/hs --namespace '' > completions/hs.bash
+    docopt-compgen target/release/hs --namespace '' > completions/hs.bash
