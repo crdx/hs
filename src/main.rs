@@ -58,7 +58,6 @@ fn parse_opts() -> Opts {
 #[derive(Debug, Deserialize)]
 struct Opts {
     flag_file: Option<String>,
-    flag_help: bool,
 }
 
 fn get_path(opts: &Opts) -> PathBuf {
