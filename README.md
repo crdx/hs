@@ -57,4 +57,4 @@ Open an [issue](https://github.com/crdx/hs/issues) or send a [pull request](http
 
 ## Licence
 
-[MIT](LICENCE.md).
+[GPLv3](LICENCE).
