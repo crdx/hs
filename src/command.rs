@@ -15,12 +15,12 @@ impl<'a> fmt::Display for Command<'a> {
         if self.line_count > 1 {
             write!(
                 formatter,
-                "{} [... TRUNCATED: {} more line(s) ...]",
+                "{}\x1b[0m [... TRUNCATED: {} more line(s) ...]",
                 first_line,
                 self.line_count - 1
             )
         } else {
-            write!(formatter, "{}", first_line)
+            write!(formatter, "{}\x1b[0m", first_line)
         }
     }
 }

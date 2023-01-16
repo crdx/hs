@@ -85,7 +85,7 @@ mod tests {
 
         assert_eq!(
             from_utf8(&stdout).unwrap(),
-            "1\t2021-06-27 20:49:55\tcommand1\n2\t2021-06-27 20:50:00\tcommand2\n"
+            "1\t2021-06-27 20:49:55\tcommand1\x1b[0m\n2\t2021-06-27 20:50:00\tcommand2\x1b[0m\n"
         );
     }
 
@@ -98,7 +98,7 @@ mod tests {
 
         assert_eq!(
             from_utf8(&stdout).unwrap(),
-            "1\t2021-06-27 20:49:55\tcommand1line1 [... TRUNCATED: 1 more line(s) ...]\n2\t2021-06-27 20:50:00\tcommand2\n"
+            "1\t2021-06-27 20:49:55\tcommand1line1\x1b[0m [... TRUNCATED: 1 more line(s) ...]\n2\t2021-06-27 20:50:00\tcommand2\x1b[0m\n"
         );
     }
 }
