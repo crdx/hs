@@ -1,4 +1,5 @@
-@_help:
+[private]
+@help:
     just --list --unsorted
 
 # run tests
