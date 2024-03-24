@@ -6,7 +6,7 @@ function __hs {
     cur="${COMP_WORDS[COMP_CWORD]}"
 
     if [ "$COMP_CWORD" -ge 1 ]; then
-        COMPREPLY=($(compgen -W '--help --file' -- "$cur"))
+        COMPREPLY=($(compgen -W '--file' -- "$cur"))
         local IFS=$'\n' # Handle filenames with spaces.
         COMPREPLY+=($(compgen -f -- "$cur"))
     fi

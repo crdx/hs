@@ -32,7 +32,6 @@ Parse timestamped Bash history and output it sorted.
 
 Options:
     -f, --file PATH    Timestamped Bash history file
-    -h, --help         Show help
 ```
 
 ## Efficiency
