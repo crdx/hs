@@ -22,7 +22,7 @@ $ target/release/hs
 7  2021-07-02 23:48:16     git status
 ```
 
-## CLI
+## Usage
 
 ```
 Usage:
