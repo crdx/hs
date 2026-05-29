@@ -1,0 +1,95 @@
+name: release
+
+on:
+    push:
+        tags:
+            - "v*"
+
+permissions:
+    contents: write
+
+jobs:
+    build:
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - target: x86_64-unknown-linux-gnu
+                      os: ubuntu-latest
+                    - target: aarch64-unknown-linux-gnu
+                      os: ubuntu-latest
+                    - target: x86_64-apple-darwin
+                      os: macos-latest
+                    - target: aarch64-apple-darwin
+                      os: macos-latest
+                    - target: x86_64-pc-windows-msvc
+                      os: windows-latest
+
+        runs-on: ${{ matrix.os }}
+
+        steps:
+            - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+            - uses: houseabsolute/actions-rust-cross@fe6ede73c7f0a50412ec05994e2aa5a7bf635eac # v1.0.7
+              with:
+                  target: ${{ matrix.target }}
+                  command: build
+                  args: --release
+
+            - name: Prepare artifact
+              shell: bash
+              run: |
+                  BINARY_NAME="${{ github.event.repository.name }}"
+                  TARGET="${{ matrix.target }}"
+
+                  if [[ "$TARGET" == *"windows"* ]]; then
+                      BINARY_NAME="${BINARY_NAME}.exe"
+                  fi
+
+                  BINARY_PATH="target/${TARGET}/release/${BINARY_NAME}"
+                  ARCHIVE_NAME="${{ github.event.repository.name }}-${TARGET}"
+
+                  if [[ "$TARGET" == *"windows"* ]]; then
+                      7z a "${ARCHIVE_NAME}.zip" "${BINARY_PATH}"
+                  else
+                      tar czf "${ARCHIVE_NAME}.tar.gz" -C "target/${TARGET}/release" "$(basename ${BINARY_PATH})"
+                  fi
+
+            - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+              with:
+                  name: ${{ github.event.repository.name }}-${{ matrix.target }}
+                  path: |
+                      *.tar.gz
+                      *.zip
+
+    release:
+        needs: build
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+            - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+              with:
+                  merge-multiple: true
+
+            - name: Install just
+              run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --tag 1.50.0 --to /usr/local/bin
+
+            - name: Extract changelog
+              id: changelog
+              run: |
+                  BODY=$(just release::notes "${GITHUB_REF_NAME}")
+                  {
+                      echo "body<<EOF"
+                      echo "$BODY"
+                      echo "EOF"
+                  } >> "$GITHUB_OUTPUT"
+
+            - name: Create release
+              run: |
+                  TAG="${GITHUB_REF#refs/tags/}"
+                  gh release create "$TAG" *.tar.gz *.zip --title "$TAG" --notes "$BODY" --latest
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  BODY: ${{ steps.changelog.outputs.body }}
