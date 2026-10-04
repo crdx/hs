@@ -11,10 +11,10 @@ fmt:
     echo 'Nothing to format'
 
 test:
-    cargo test
+    TZ=Europe/London cargo test
 
 cov:
-    cargo tarpaulin --out Html --skip-clean --exclude-files src/main.rs
+    TZ=Europe/London cargo tarpaulin --out Html --skip-clean --exclude-files src/main.rs
 
 build:
     cargo build --release
