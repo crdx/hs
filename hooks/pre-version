@@ -16,7 +16,7 @@ fi
 sed -i "s/^## \[Next\]\$/&\n\n## [${NEW_VERSION}] — $(date +%F)/" CHANGELOG.md
 
 sed -i "s/^version = \"[^\"]*\"/version = \"${NEW_VERSION}\"/" Cargo.toml
-cargo generate-lockfile
+sed -i "/^name = \"hs\"$/,/^$/ s/^version = \"[^\"]*\"/version = \"${NEW_VERSION}\"/" Cargo.lock
 
 git add Cargo.toml Cargo.lock CHANGELOG.md
 if git diff --cached --quiet; then
