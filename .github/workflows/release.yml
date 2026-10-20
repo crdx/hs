@@ -18,19 +18,13 @@ jobs:
                       os: ubuntu-latest
                     - target: aarch64-unknown-linux-gnu
                       os: ubuntu-latest
-                    - target: x86_64-apple-darwin
-                      os: macos-latest
-                    - target: aarch64-apple-darwin
-                      os: macos-latest
-                    - target: x86_64-pc-windows-msvc
-                      os: windows-latest
 
         runs-on: ${{ matrix.os }}
 
         steps:
-            - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-            - uses: houseabsolute/actions-rust-cross@fe6ede73c7f0a50412ec05994e2aa5a7bf635eac # v1.0.7
+            - uses: houseabsolute/actions-rust-cross@21b0f18dc621b25bfae556ff2791fca4173121e8 # v1.0.8
               with:
                   target: ${{ matrix.target }}
                   command: build
@@ -42,39 +36,30 @@ jobs:
                   BINARY_NAME="${{ github.event.repository.name }}"
                   TARGET="${{ matrix.target }}"
 
-                  if [[ "$TARGET" == *"windows"* ]]; then
-                      BINARY_NAME="${BINARY_NAME}.exe"
-                  fi
-
                   BINARY_PATH="target/${TARGET}/release/${BINARY_NAME}"
                   ARCHIVE_NAME="${{ github.event.repository.name }}-${TARGET}"
 
-                  if [[ "$TARGET" == *"windows"* ]]; then
-                      7z a "${ARCHIVE_NAME}.zip" "${BINARY_PATH}"
-                  else
-                      tar czf "${ARCHIVE_NAME}.tar.gz" -C "target/${TARGET}/release" "$(basename ${BINARY_PATH})"
-                  fi
+                  tar czf "${ARCHIVE_NAME}.tar.gz" -C "target/${TARGET}/release" "$(basename ${BINARY_PATH})"
 
-            - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+            - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
               with:
                   name: ${{ github.event.repository.name }}-${{ matrix.target }}
                   path: |
                       *.tar.gz
-                      *.zip
 
     release:
         needs: build
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-            - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+            - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
               with:
                   merge-multiple: true
 
             - name: Install just
-              run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --tag 1.50.0 --to /usr/local/bin
+              run: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --tag 1.58.0 --to /usr/local/bin
 
             - name: Extract changelog
               id: changelog
@@ -89,7 +74,9 @@ jobs:
             - name: Create release
               run: |
                   TAG="${GITHUB_REF#refs/tags/}"
-                  gh release create "$TAG" *.tar.gz *.zip --title "$TAG" --notes "$BODY" --latest
+                  shopt -s nullglob
+                  ASSETS=(*.tar.gz)
+                  gh release create "$TAG" "${ASSETS[@]}" --title "$TAG" --notes "$BODY" --latest
               env:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   BODY: ${{ steps.changelog.outputs.body }}
